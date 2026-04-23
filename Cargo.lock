@@ -3,21 +3,21 @@
 version = 4
 
 [[package]]
-name = "bum-piss-core"
+name = "olex-core"
 version = "0.1.0"
 
 [[package]]
-name = "bum-piss-hw"
+name = "olex-hw"
 version = "0.1.0"
 
 [[package]]
-name = "bum-piss-plugin"
+name = "olex-plug"
 version = "0.1.0"
 
 [[package]]
-name = "bum_piss_proto"
+name = "olex-ui"
 version = "0.1.0"
 
 [[package]]
-name = "bumgui"
+name = "olex_proto"
 version = "0.1.0"
