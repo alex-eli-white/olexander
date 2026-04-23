@@ -137,5 +137,5 @@ its sick, its piss
 - UI refresh 60fps without affecting audio thread
 - Audio callback isolated on dedicated core
 - Lock-free communication between audio and UI threads
-- Graceful overflow handling (you already wrote this for Eli)
+- Graceful overflow handling 
 
