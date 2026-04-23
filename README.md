@@ -1,12 +1,12 @@
-# bum piss
+# olexander
 
-Bum piss is aiming to be a single device for a robust live show for guitarists.
+olexander is aiming to be a single device for a robust live show for guitarists.
 
 its sick, its piss
 
 ---
 
-**Bum Piss - Feature Specification v0.1**
+**Olexander - Feature Specification v0.1**
 
 ---
 
