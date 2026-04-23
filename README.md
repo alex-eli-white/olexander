@@ -2,7 +2,7 @@
 
 Bum piss is aiming to be a single device for a robust live show for guitarists.
 
-Let's build this out properly.
+its sick, its piss
 
 ---
 
@@ -139,6 +139,3 @@ Let's build this out properly.
 - Lock-free communication between audio and UI threads
 - Graceful overflow handling (you already wrote this for Eli)
 
----
-
-That's the full picture. Anything you want to add, cut, or reprioritize before we init the workspace and write the first lines?
