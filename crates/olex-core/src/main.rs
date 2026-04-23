@@ -171,6 +171,37 @@ impl EnvelopeFollower {
     }
 }
 
+enum InputMode {
+    Live,
+    Sine { phase: f32 },
+    Wav { samples: Vec<f32>, index: usize },
+}
+
+impl InputMode {
+    fn next_sample(&mut self, live: f32, sample_rate: f32) -> f32 {
+        match self {
+            InputMode::Live => live,
+
+            InputMode::Sine { phase } => {
+                let freq = 110.0;
+                let out = (*phase * std::f32::consts::TAU).sin() * 0.25;
+                *phase = (*phase + freq / sample_rate) % 1.0;
+                out
+            }
+
+            InputMode::Wav { samples, index } => {
+                if samples.is_empty() {
+                    return 0.0;
+                }
+
+                let out = samples[*index];
+                *index = (*index + 1) % samples.len();
+                out
+            }
+        }
+    }
+}
+
 pub struct OnsetDetector {
     prev_block_env: f32,
     cooldown_blocks: usize,
@@ -252,6 +283,16 @@ impl OlexanderEngine {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let mode_arg = std::env::args().nth(1).unwrap_or_else(|| "live".into());
+
+    let mut input_mode = match mode_arg.as_str() {
+        "live" => InputMode::Live,
+        "sine" => InputMode::Sine { phase: 0.0 },
+        path => InputMode::Wav {
+            samples: load_wav_mono(path),
+            index: 0,
+        },
+    };
     let input_channel: usize = std::env::args()
         .nth(1)
         .and_then(|s| s.parse().ok())
@@ -307,7 +348,8 @@ fn main() -> Result<(), Box<dyn Error>> {
             let mut count = 0usize;
 
             for frame in input.chunks_exact(2) {
-                let guitar = frame[guitar_channel];
+                let live = frame[input_channel];
+                let guitar = input_mode.next_sample(live, sample_rate as f32);
 
                 let _ = producer.try_push(guitar);
 
@@ -385,5 +427,24 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
 
         thread::sleep(Duration::from_millis(1));
+    }
+}
+
+fn load_wav_mono(path: &str) -> Vec<f32> {
+    let mut reader = hound::WavReader::open(path).expect("failed to open wav");
+    let spec = reader.spec();
+
+    match spec.sample_format {
+        hound::SampleFormat::Float => reader.samples::<f32>().filter_map(Result::ok).collect(),
+
+        hound::SampleFormat::Int => {
+            let max = (1i64 << (spec.bits_per_sample - 1)) as f32;
+
+            reader
+                .samples::<i32>()
+                .filter_map(Result::ok)
+                .map(|s| s as f32 / max)
+                .collect()
+        }
     }
 }

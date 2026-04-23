@@ -7,3 +7,4 @@ edition = "2024"
 olex_proto = { path = "../olex_proto" }
 cpal = "0.17"
 ringbuf = "0.4"
+hound = "3.5"
