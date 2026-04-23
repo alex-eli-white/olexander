@@ -4,3 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+olex_proto = { path = "../olex_proto" }
+cpal = "0.17"
+ringbuf = "0.4"
